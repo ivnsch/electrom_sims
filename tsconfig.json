@@ -2,7 +2,9 @@
   "compilerOptions": {
     "outDir": "./js_out",
     "rootDir": "./src",
-    "strict": true
+    "strict": true,
+    "module": "ESNext",
+    "target": "ES6"
   },
   "include": ["src/**/*"]
 }
