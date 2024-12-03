@@ -20,15 +20,23 @@ enum DrawableType {
 
 type Drawable = Circle | Tbd;
 
-const update = (objs: Drawable[]) => {};
+const update = (objs: Drawable[], time: number) => {};
 
-const draw = (ctx: CanvasRenderingContext2D, objs: Drawable[]) => {
+const draw = (
+  ctx: CanvasRenderingContext2D,
+  time: number,
+  objs: Drawable[]
+) => {
   objs.forEach((o) => {
-    renderObj(ctx, o);
+    renderObj(ctx, time, o);
   });
 };
 
-const renderObj = (ctx: CanvasRenderingContext2D, obj: Drawable) => {
+const renderObj = (
+  ctx: CanvasRenderingContext2D,
+  time: number,
+  obj: Drawable
+) => {
   switch (obj.type) {
     case DrawableType.Circle: {
       ctx.beginPath();
@@ -39,10 +47,16 @@ const renderObj = (ctx: CanvasRenderingContext2D, obj: Drawable) => {
   }
 };
 
-const simLoop = (ctx: CanvasRenderingContext2D, objs: Drawable[]) => {
-  update(objs);
-  draw(ctx, objs);
-  requestAnimationFrame(() => simLoop(ctx, objs));
+const simLoop = (
+  ctx: CanvasRenderingContext2D,
+  time: number,
+  objs: Drawable[]
+) => {
+  console.log("time: " + time);
+
+  update(objs, time);
+  draw(ctx, time, objs);
+  requestAnimationFrame((time) => simLoop(ctx, time, objs));
 };
 
 const run = (document: Document): void => {
@@ -61,7 +75,7 @@ const run = (document: Document): void => {
     { x: 300, y: 200, radius: 20, type: DrawableType.Circle },
   ];
 
-  simLoop(ctx, objs);
+  simLoop(ctx, performance.now(), objs);
 };
 
 run(document);
