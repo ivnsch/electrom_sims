@@ -1,3 +1,3 @@
 ```
-tsc coulomb.ts
+tsc
 ```

@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "outDir": "./js_out",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"]
+}
