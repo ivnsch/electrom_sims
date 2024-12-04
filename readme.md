@@ -1,3 +1,5 @@
+Transpile TS (watching for changes):
+
 ```
-tsc
+tsc --watch
 ```
