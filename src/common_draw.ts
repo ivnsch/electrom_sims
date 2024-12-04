@@ -35,12 +35,16 @@ const renderObj = (
       break;
     }
     case DrawableType.Line: {
-      drawLine(ctx, drawable.start, drawable.end);
+      const screenCordsStart = toScreenCoords(drawable.start);
+      const screenCordsEnd = toScreenCoords(drawable.end);
+      drawLine(ctx, screenCordsStart, screenCordsEnd);
       break;
     }
     case DrawableType.Arrow: {
-      drawLine(ctx, drawable.start, drawable.end);
-      drawCircle(ctx, drawable.end, 2, "black");
+      const screenCordsStart = toScreenCoords(drawable.start);
+      const screenCordsEnd = toScreenCoords(drawable.end);
+      drawLine(ctx, screenCordsStart, screenCordsEnd);
+      drawCircle(ctx, screenCordsEnd, 2, "black");
       break;
     }
   }
