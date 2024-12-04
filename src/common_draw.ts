@@ -37,5 +37,13 @@ const renderObj = (
       ctx.fillText(drawable.text, screenCords.x, screenCords.y);
       break;
     }
+    case DrawableType.Line: {
+      ctx.strokeStyle = "black";
+      ctx.beginPath();
+      ctx.moveTo(drawable.start.x, drawable.start.y);
+      ctx.lineTo(drawable.end.x, drawable.end.y);
+      ctx.stroke();
+      break;
+    }
   }
 };

@@ -15,9 +15,16 @@ export type Obj = {
   charge: number;
 };
 
+// this gets a "Drawable" at the end to diff from other things named "Text"
 export type TextDrawable = DrawableInterface & {
   type: DrawableType.Text;
   text: string;
+};
+
+export type Line = DrawableInterface & {
+  type: DrawableType.Line;
+  start: Vec2;
+  end: Vec2;
 };
 
 export interface DrawableInterface {
@@ -29,6 +36,7 @@ export interface DrawableInterface {
 export enum DrawableType {
   Circle,
   Text,
+  Line,
 }
 
-export type Drawable = Circle | TextDrawable;
+export type Drawable = Circle | TextDrawable | Line;

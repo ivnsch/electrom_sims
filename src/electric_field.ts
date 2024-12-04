@@ -5,6 +5,7 @@ import {
   DrawableType,
   Circle,
   TextDrawable,
+  Line,
 } from "./entities.js";
 import { applyForce } from "./common_phys.js";
 import { draw } from "./common_draw.js";
@@ -59,25 +60,43 @@ const run = (document: Document): void => {
 
   let forces: Drawable[] = [];
 
-  let step = 50;
-  let width = 1000;
-  let height = 600;
+  const step = 50;
+
+  // dimensions assigned in html
+  const width = 1000;
+  const height = 600;
+
+  const maxMag = 180; // hardcoded current max. magnitude
+  const lineLenMax = 30; // rendered max length
+
   for (let x = 0; x < width / step; x++) {
     for (let y = 0; y < height / step; y++) {
       const point = new Vec2(x * step, y * step);
       const f = calcForce(obj.obj, point);
 
-      const item: TextDrawable = {
-        obj: {
-          charge: 0,
-          mass: 0,
-          vel: new Vec2(0, 0),
-          pos: point,
-        },
-        type: DrawableType.Text,
-        text: "" + f.magnitude().toFixed(1),
-      };
-      forces.push(item);
+      const lineStart = point;
+
+      const factor = lineLenMax / maxMag;
+      let magnitude = f.magnitude();
+      if (magnitude) {
+        const lineEnd = f
+          .normalize()
+          .mul(magnitude * factor)
+          .add(lineStart);
+
+        const item: Line = {
+          obj: {
+            charge: 1,
+            mass: 1,
+            vel: new Vec2(0, 0),
+            pos: point,
+          },
+          type: DrawableType.Line,
+          start: lineStart,
+          end: lineEnd,
+        };
+        forces.push(item);
+      }
     }
   }
 
