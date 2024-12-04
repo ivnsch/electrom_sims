@@ -1,6 +1,7 @@
 type Circle = DrawableInterface & {
   radius: number;
   type: DrawableType.Circle;
+  color: string;
 };
 
 // physics object
@@ -29,11 +30,18 @@ enum DrawableType {
 
 type Drawable = Circle | Tbd;
 
-const applyForce = (obj: Obj, f: Vec2) => {
+const applyForce = (obj: Obj, f: Vec2, deltaTime: number) => {
+  // f = ma
   const ax = f.x / obj.mass;
   const ay = f.y / obj.mass;
-  obj.vel.x += ax;
-  obj.vel.y += ay;
+
+  // a -> v
+  const velX = ax * deltaTime;
+  const velY = ay * deltaTime;
+
+  // add the velocity
+  obj.vel.x += velX;
+  obj.vel.y += velY;
 };
 
 let lastTime = 0;
@@ -44,14 +52,15 @@ const update = (drawables: Drawable[], time: number) => {
   let d1 = drawables[0];
   let d2 = drawables[1];
 
-  let force = calcForce(d1.obj, d2.obj);
+  let force1 = calcForce(d1.obj, d2.obj);
+  let force2 = calcForce(d2.obj, d1.obj);
 
-  applyForce(d1.obj, force);
-  applyForce(d2.obj, { x: -force.x, y: -force.y });
+  applyForce(d1.obj, force1, deltaTime);
+  applyForce(d2.obj, force2, deltaTime);
 
   drawables.forEach((d) => {
     // this needs to be implemented better
-    const slowingFactor = 10;
+    const slowingFactor = 20000;
     d.obj.pos.x += (d.obj.vel.x * deltaTime) / slowingFactor;
     d.obj.pos.y += (d.obj.vel.y * deltaTime) / slowingFactor;
   });
@@ -84,7 +93,7 @@ const renderObj = (
     case DrawableType.Circle: {
       ctx.beginPath();
       ctx.arc(screenCords.x, screenCords.y, drawable.radius, 0, 2 * Math.PI);
-      ctx.fillStyle = "red";
+      ctx.fillStyle = drawable.color;
       ctx.fill();
     }
   }
@@ -100,15 +109,15 @@ const calcForce = (obj1: Obj, obj2: Obj): Vec2 => {
   // Coulomb constant https://en.wikipedia.org/wiki/Coulomb%27s_law#Coulomb_constant
   const k = 8.987e9;
 
-  const dx = obj2.pos.x - obj1.pos.x;
-  const dy = obj2.pos.y - obj1.pos.y;
+  const dx = obj1.pos.x - obj2.pos.x;
+  const dy = obj1.pos.y - obj2.pos.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
   const rx = dx / distance;
   const ry = dy / distance;
 
   if (distance < 1e-6) return { x: 0, y: 0 };
 
-  const forceMagnitude = (k * Math.abs(obj1.charge * obj2.charge)) / distance;
+  const forceMagnitude = (k * obj1.charge * obj2.charge) / distance;
 
   return {
     x: forceMagnitude * rx,
@@ -121,8 +130,6 @@ const simLoop = (
   time: number,
   drawables: Drawable[]
 ) => {
-  console.log("time: " + time);
-
   update(drawables, time);
   draw(ctx, time, drawables);
   requestAnimationFrame((time) => simLoop(ctx, time, drawables));
@@ -141,18 +148,6 @@ const run = (document: Document): void => {
 
   const drawables = [
     {
-      x: 200,
-      y: 100,
-      radius: 20,
-      type: DrawableType.Circle,
-      obj: {
-        charge: 1e-6,
-        mass: 1,
-        vel: { x: 0, y: 0 },
-        pos: { x: 200, y: 100 },
-      },
-    },
-    {
       x: 300,
       y: 200,
       radius: 20,
@@ -163,6 +158,20 @@ const run = (document: Document): void => {
         vel: { x: 0, y: 0 },
         pos: { x: 300, y: 200 },
       },
+      color: "red",
+    },
+    {
+      x: 200,
+      y: 100,
+      radius: 20,
+      type: DrawableType.Circle,
+      obj: {
+        charge: 1e-6,
+        mass: 1,
+        vel: { x: 0, y: 0 },
+        pos: { x: 200, y: 100 },
+      },
+      color: "green",
     },
   ];
 
