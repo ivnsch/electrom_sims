@@ -1,47 +1,8 @@
 import { Vec2 } from "./vec2.js";
-
-type Circle = DrawableInterface & {
-  radius: number;
-  type: DrawableType.Circle;
-  color: string;
-};
-
-// physics object
-// guess this can be more specific..
-type Obj = {
-  pos: Vec2;
-  mass: number;
-  vel: Vec2;
-  charge: number;
-};
-
-type Tbd = DrawableInterface & {
-  type: DrawableType.Tbd;
-};
-
-interface DrawableInterface {
-  type: DrawableType;
-  // for now all drawables have a corresponding physics object
-  obj: Obj;
-}
-
-enum DrawableType {
-  Circle,
-  Tbd,
-}
-
-type Drawable = Circle | Tbd;
-
-const applyForce = (obj: Obj, f: Vec2, deltaTime: number) => {
-  // f = ma
-  const a = f.div(obj.mass);
-
-  // a -> v
-  const vel = a.mul(deltaTime);
-
-  // add the velocity
-  obj.vel = obj.vel.add(vel);
-};
+import { Obj, Drawable, DrawableType } from "./entities.js";
+import { applyForce } from "./common_phys.js";
+import { draw } from "./common_draw.js";
+import { getContext } from "./common_html.js";
 
 let lastTime = 0;
 const update = (drawables: Drawable[], time: number) => {
@@ -65,41 +26,8 @@ const update = (drawables: Drawable[], time: number) => {
   });
 };
 
-const draw = (
-  ctx: CanvasRenderingContext2D,
-  time: number,
-  objs: Drawable[]
-) => {
-  ctx.clearRect(0, 0, 1000, 600);
-
-  objs.forEach((o) => {
-    renderObj(ctx, time, o);
-  });
-};
-
-const toScreenCoords = (objPos: Vec2): Vec2 => {
-  // for now screen and real world coords are the same
-  return objPos;
-};
-
-const renderObj = (
-  ctx: CanvasRenderingContext2D,
-  time: number,
-  drawable: Drawable
-) => {
-  const screenCords = toScreenCoords(drawable.obj.pos);
-  switch (drawable.type) {
-    case DrawableType.Circle: {
-      ctx.beginPath();
-      ctx.arc(screenCords.x, screenCords.y, drawable.radius, 0, 2 * Math.PI);
-      ctx.fillStyle = drawable.color;
-      ctx.fill();
-    }
-  }
-};
-
 // https://en.wikipedia.org/wiki/Coulomb%27s_law#Mathematical_form
-const calcForce = (obj1: Obj, obj2: Obj): Vec2 => {
+export const calcForce = (obj1: Obj, obj2: Obj): Vec2 => {
   // Coulomb constant https://en.wikipedia.org/wiki/Coulomb%27s_law#Coulomb_constant
   const k = 8.987e9;
 
@@ -127,15 +55,7 @@ const simLoop = (
 };
 
 const run = (document: Document): void => {
-  const canvas = document.getElementById("mycanvas") as HTMLCanvasElement;
-  if (!canvas) {
-    throw new Error("Canvas element not found");
-  }
-
-  const ctx = canvas.getContext("2d");
-  if (!ctx) {
-    throw new Error("2D context not available");
-  }
+  const ctx = getContext(document);
 
   const drawables = [
     {
