@@ -1,5 +1,5 @@
 import { Vec2 } from "./vec2.js";
-import { Obj, Drawable, DrawableType } from "./entities.js";
+import { Obj, Drawable, DrawableType, Circle } from "./entities.js";
 import { applyForce } from "./common_phys.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
@@ -56,10 +56,8 @@ const simLoop = (
 const run = (document: Document): void => {
   const ctx = getContext(document);
 
-  const drawables = [
+  const drawables: Circle[] = [
     {
-      x: 300,
-      y: 200,
       radius: 20,
       type: DrawableType.Circle,
       obj: {
@@ -71,8 +69,6 @@ const run = (document: Document): void => {
       color: "red",
     },
     {
-      x: 200,
-      y: 100,
       radius: 20,
       type: DrawableType.Circle,
       obj: {
