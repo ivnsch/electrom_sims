@@ -1,3 +1,5 @@
+import { Vec2 } from "./vec2.js";
+
 type Circle = DrawableInterface & {
   radius: number;
   type: DrawableType.Circle;
@@ -32,16 +34,13 @@ type Drawable = Circle | Tbd;
 
 const applyForce = (obj: Obj, f: Vec2, deltaTime: number) => {
   // f = ma
-  const ax = f.x / obj.mass;
-  const ay = f.y / obj.mass;
+  const a = f.div(obj.mass);
 
   // a -> v
-  const velX = ax * deltaTime;
-  const velY = ay * deltaTime;
+  const vel = a.mul(deltaTime);
 
   // add the velocity
-  obj.vel.x += velX;
-  obj.vel.y += velY;
+  obj.vel = obj.vel.add(vel);
 };
 
 let lastTime = 0;
@@ -80,7 +79,7 @@ const draw = (
 
 const toScreenCoords = (objPos: Vec2): Vec2 => {
   // for now screen and real world coords are the same
-  return { x: objPos.x, y: objPos.y };
+  return objPos;
 };
 
 const renderObj = (
@@ -99,11 +98,6 @@ const renderObj = (
   }
 };
 
-type Vec2 = {
-  x: number;
-  y: number;
-};
-
 // https://en.wikipedia.org/wiki/Coulomb%27s_law#Mathematical_form
 const calcForce = (obj1: Obj, obj2: Obj): Vec2 => {
   // Coulomb constant https://en.wikipedia.org/wiki/Coulomb%27s_law#Coulomb_constant
@@ -115,14 +109,11 @@ const calcForce = (obj1: Obj, obj2: Obj): Vec2 => {
   const rx = dx / distance;
   const ry = dy / distance;
 
-  if (distance < 1e-6) return { x: 0, y: 0 };
+  if (distance < 1e-6) return new Vec2(0, 0);
 
   const forceMagnitude = (k * obj1.charge * obj2.charge) / distance;
 
-  return {
-    x: forceMagnitude * rx,
-    y: forceMagnitude * ry,
-  };
+  return new Vec2(forceMagnitude * rx, forceMagnitude * ry);
 };
 
 const simLoop = (
@@ -155,8 +146,8 @@ const run = (document: Document): void => {
       obj: {
         charge: -1e-6,
         mass: 1,
-        vel: { x: 0, y: 0 },
-        pos: { x: 300, y: 200 },
+        vel: new Vec2(0, 0),
+        pos: new Vec2(300, 200),
       },
       color: "red",
     },
@@ -168,8 +159,8 @@ const run = (document: Document): void => {
       obj: {
         charge: 1e-6,
         mass: 1,
-        vel: { x: 0, y: 0 },
-        pos: { x: 200, y: 100 },
+        vel: new Vec2(0, 0),
+        pos: new Vec2(200, 100),
       },
       color: "green",
     },
