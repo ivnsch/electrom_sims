@@ -31,17 +31,15 @@ export const calcForce = (obj1: Obj, obj2: Obj): Vec2 => {
   // Coulomb constant https://en.wikipedia.org/wiki/Coulomb%27s_law#Coulomb_constant
   const k = 8.987e9;
 
-  const dx = obj1.pos.x - obj2.pos.x;
-  const dy = obj1.pos.y - obj2.pos.y;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-  const rx = dx / distance;
-  const ry = dy / distance;
+  const dPos = obj1.pos.sub(obj2.pos);
+  const distance = Math.sqrt(Math.pow(dPos.x, 2) + Math.pow(dPos.y, 2));
+  const r = dPos.div(distance);
 
   if (distance < 1e-6) return new Vec2(0, 0);
 
   const forceMagnitude = (k * obj1.charge * obj2.charge) / distance;
 
-  return new Vec2(forceMagnitude * rx, forceMagnitude * ry);
+  return r.mul(forceMagnitude);
 };
 
 const simLoop = (
