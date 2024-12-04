@@ -6,6 +6,7 @@ import {
   Circle,
   TextDrawable,
   Line,
+  Arrow,
 } from "./entities.js";
 import { applyForce } from "./common_phys.js";
 import { draw } from "./common_draw.js";
@@ -84,14 +85,14 @@ const run = (document: Document): void => {
           .mul(magnitude * factor)
           .add(lineStart);
 
-        const item: Line = {
+        const item: Arrow = {
           obj: {
             charge: 1,
             mass: 1,
             vel: new Vec2(0, 0),
             pos: point,
           },
-          type: DrawableType.Line,
+          type: DrawableType.Arrow,
           start: lineStart,
           end: lineEnd,
         };

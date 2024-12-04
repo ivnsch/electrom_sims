@@ -1,4 +1,4 @@
-import { Drawable, DrawableType } from "./entities.js";
+import { Drawable, DrawableType, Line } from "./entities.js";
 import { Vec2 } from "./vec2.js";
 
 export const draw = (
@@ -26,10 +26,7 @@ const renderObj = (
   const screenCords = toScreenCoords(drawable.obj.pos);
   switch (drawable.type) {
     case DrawableType.Circle: {
-      ctx.beginPath();
-      ctx.arc(screenCords.x, screenCords.y, drawable.radius, 0, 2 * Math.PI);
-      ctx.fillStyle = drawable.color;
-      ctx.fill();
+      drawCircle(ctx, screenCords, drawable.radius, drawable.color);
       break;
     }
     case DrawableType.Text: {
@@ -38,12 +35,33 @@ const renderObj = (
       break;
     }
     case DrawableType.Line: {
-      ctx.strokeStyle = "black";
-      ctx.beginPath();
-      ctx.moveTo(drawable.start.x, drawable.start.y);
-      ctx.lineTo(drawable.end.x, drawable.end.y);
-      ctx.stroke();
+      drawLine(ctx, drawable.start, drawable.end);
+      break;
+    }
+    case DrawableType.Arrow: {
+      drawLine(ctx, drawable.start, drawable.end);
+      drawCircle(ctx, drawable.end, 2, "black");
       break;
     }
   }
+};
+
+const drawCircle = (
+  ctx: CanvasRenderingContext2D,
+  center: Vec2,
+  radius: number,
+  color: string
+) => {
+  ctx.beginPath();
+  ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI);
+  ctx.fillStyle = color;
+  ctx.fill();
+};
+
+const drawLine = (ctx: CanvasRenderingContext2D, start: Vec2, end: Vec2) => {
+  ctx.strokeStyle = "black";
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(end.x, end.y);
+  ctx.stroke();
 };

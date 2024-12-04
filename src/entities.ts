@@ -27,6 +27,12 @@ export type Line = DrawableInterface & {
   end: Vec2;
 };
 
+export type Arrow = DrawableInterface & {
+  type: DrawableType.Arrow;
+  start: Vec2;
+  end: Vec2;
+};
+
 export interface DrawableInterface {
   type: DrawableType;
   // for now all drawables have a corresponding physics object
@@ -37,6 +43,7 @@ export enum DrawableType {
   Circle,
   Text,
   Line,
+  Arrow,
 }
 
-export type Drawable = Circle | TextDrawable | Line;
+export type Drawable = Circle | TextDrawable | Line | Arrow;
