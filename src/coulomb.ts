@@ -33,9 +33,10 @@ export const calcForce = (obj1: Obj, obj2: Obj): Vec2 => {
 
   const dPos = obj1.pos.sub(obj2.pos);
   const distance = Math.sqrt(Math.pow(dPos.x, 2) + Math.pow(dPos.y, 2));
-  const r = dPos.div(distance);
 
   if (distance < 1e-6) return new Vec2(0, 0);
+
+  const r = dPos.div(distance);
 
   const forceMagnitude = (k * obj1.charge * obj2.charge) / distance;
 
