@@ -15,8 +15,9 @@ export type Obj = {
   charge: number;
 };
 
-export type Tbd = DrawableInterface & {
-  type: DrawableType.Tbd;
+export type TextDrawable = DrawableInterface & {
+  type: DrawableType.Text;
+  text: string;
 };
 
 export interface DrawableInterface {
@@ -27,7 +28,7 @@ export interface DrawableInterface {
 
 export enum DrawableType {
   Circle,
-  Tbd,
+  Text,
 }
 
-export type Drawable = Circle | Tbd;
+export type Drawable = Circle | TextDrawable;

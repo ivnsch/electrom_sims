@@ -30,6 +30,12 @@ const renderObj = (
       ctx.arc(screenCords.x, screenCords.y, drawable.radius, 0, 2 * Math.PI);
       ctx.fillStyle = drawable.color;
       ctx.fill();
+      break;
+    }
+    case DrawableType.Text: {
+      ctx.fillStyle = "black";
+      ctx.fillText(drawable.text, screenCords.x, screenCords.y);
+      break;
     }
   }
 };
