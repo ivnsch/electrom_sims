@@ -11,48 +11,11 @@ import {
 import { applyForce } from "./common_phys.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
+import { calcForce } from "./electric_field.js";
 
 const update = (drawables: Drawable[], time: number) => {
   // for now we'll just assume this obj
   let d = drawables[0];
-};
-
-// Coulomb constant https://en.wikipedia.org/wiki/Coulomb%27s_law#Coulomb_constant
-const k = 8.987e9;
-
-const calcForceMagnitude = (obj: Obj, point: Vec2): number => {
-  const distance = calcDistance(obj, point);
-
-  if (distance < 1e-6) return 0;
-
-  return (k * obj.charge) / distance;
-};
-
-const calcDistance = (obj: Obj, point: Vec2): number => {
-  const dPos = point.sub(obj.pos);
-  return Math.sqrt(Math.pow(dPos.x, 2) + Math.pow(dPos.y, 2));
-};
-
-const calculateDirectionVector = (obj: Obj, point: Vec2): Vec2 => {
-  const distance = calcDistance(obj, point);
-
-  if (distance < 1e-6) return new Vec2(0, 0);
-
-  const dPos = point.sub(obj.pos);
-  return dPos.div(distance);
-};
-
-// https://en.wikipedia.org/wiki/Coulomb%27s_law#Mathematical_form
-const calcForce = (obj: Obj, point: Vec2): Vec2 => {
-  const distance = calcDistance(obj, point);
-
-  if (distance < 1e-6) return new Vec2(0, 0);
-
-  const r = calculateDirectionVector(obj, point);
-
-  const forceMagnitude = calcForceMagnitude(obj, point);
-
-  return r.mul(forceMagnitude);
 };
 
 const simLoop = (
@@ -106,9 +69,10 @@ const run = (document: Document): void => {
   const width = 1000 * correction;
   const height = 600 * correction;
 
-  const maxMag = 180; // hardcoded current max. magnitude
+  const maxMag = 3.66; // hardcoded current max. magnitude
   const lineLenMax = 30; // rendered max length
 
+  let maxMagnitude = 0;
   for (let x = 0; x < width / step; x++) {
     for (let y = 0; y < height / step; y++) {
       let point = new Vec2(x * step, y * step);
@@ -125,6 +89,8 @@ const run = (document: Document): void => {
 
       const factor = lineLenMax / maxMag;
       let magnitude = forceAdded.magnitude();
+      maxMagnitude = Math.max(magnitude, maxMagnitude);
+
       if (magnitude) {
         const lineEnd = forceAdded
           .normalize()
@@ -148,6 +114,7 @@ const run = (document: Document): void => {
       }
     }
   }
+  console.log("maxMagnitude: %o", maxMagnitude);
 
   const drawables: Drawable[] = [objPositive, objNegative];
 

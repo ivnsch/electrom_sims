@@ -23,13 +23,14 @@ export const calcForce = (obj: Obj, point: Vec2): Vec2 => {
   const k = 8.987e9;
 
   const dPos = point.sub(obj.pos);
-  const distance = Math.sqrt(Math.pow(dPos.x, 2) + Math.pow(dPos.y, 2));
+  const distanceSquared = Math.pow(dPos.x, 2) + Math.pow(dPos.y, 2);
 
-  if (distance < 1e-6) return new Vec2(0, 0);
+  if (distanceSquared < 1e-12) return new Vec2(0, 0);
 
+  const distance = Math.sqrt(distanceSquared);
   const r = dPos.div(distance);
 
-  const forceMagnitude = (k * obj.charge) / distance;
+  const forceMagnitude = (k * obj.charge) / distanceSquared;
 
   return r.mul(forceMagnitude);
 };
@@ -67,9 +68,10 @@ const run = (document: Document): void => {
   const width = 1000;
   const height = 600;
 
-  const maxMag = 180; // hardcoded current max. magnitude
+  const maxMag = 3.59; // hardcoded current max. magnitude
   const lineLenMax = 30; // rendered max length
 
+  let maxMagnitude = 0;
   for (let x = 0; x < width / step; x++) {
     for (let y = 0; y < height / step; y++) {
       const point = new Vec2(x * step, y * step);
@@ -79,6 +81,7 @@ const run = (document: Document): void => {
 
       const factor = lineLenMax / maxMag;
       let magnitude = f.magnitude();
+      maxMagnitude = Math.max(magnitude, maxMagnitude);
       if (magnitude) {
         const lineEnd = f
           .normalize()
@@ -101,6 +104,7 @@ const run = (document: Document): void => {
     }
   }
 
+  console.log("maxMagnitude: %o", maxMagnitude);
   const drawables: Drawable[] = [obj];
 
   drawables.push(...forces);
