@@ -22,7 +22,7 @@ export const calcForce = (obj: Obj, point: Vec2): Vec2 => {
   // Coulomb constant https://en.wikipedia.org/wiki/Coulomb%27s_law#Coulomb_constant
   const k = 8.987e9;
 
-  const dPos = obj.pos.sub(point);
+  const dPos = point.sub(obj.pos);
   const distance = Math.sqrt(Math.pow(dPos.x, 2) + Math.pow(dPos.y, 2));
 
   if (distance < 1e-6) return new Vec2(0, 0);
@@ -51,7 +51,7 @@ const run = (document: Document): void => {
     radius: 20,
     type: DrawableType.Circle,
     obj: {
-      charge: -1e-6,
+      charge: 1e-6,
       mass: 1,
       vel: new Vec2(0, 0),
       pos: new Vec2(300, 200),
