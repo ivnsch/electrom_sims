@@ -62,7 +62,11 @@ const drawCircle = (
   ctx.fill();
 };
 
-const drawLine = (ctx: CanvasRenderingContext2D, start: Vec2, end: Vec2) => {
+export const drawLine = (
+  ctx: CanvasRenderingContext2D,
+  start: Vec2,
+  end: Vec2
+) => {
   ctx.strokeStyle = "black";
   ctx.beginPath();
   ctx.moveTo(start.x, start.y);
