@@ -5,18 +5,26 @@ import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 import { calcForce } from "./electric_field.js";
 
+const drawables: Drawable[] = [];
+
 let lastTime = 0;
 const update = (drawables: Drawable[], time: number) => {
   let deltaTime = time - lastTime;
   lastTime = time;
 
+  // TODO object identifier / tag / different types
+  // to avoid index and drawable type based access
   const sourceObj = drawables[0];
-  const movingObj = drawables[1];
+  const movingObjs = drawables.slice(1);
 
-  const force = calcForce(sourceObj.obj, movingObj.obj.pos);
+  for (let movingObj of movingObjs) {
+    if (movingObj.type == DrawableType.Circle) {
+      const force = calcForce(sourceObj.obj, movingObj.obj.pos);
 
-  applyForce(movingObj.obj, force, deltaTime);
-  applyVelocity(movingObj.obj, deltaTime, 2000);
+      applyForce(movingObj.obj, force, deltaTime);
+      applyVelocity(movingObj.obj, deltaTime, 2000);
+    }
+  }
 };
 
 const simLoop = (
@@ -121,7 +129,8 @@ const run = (document: Document): void => {
     color: "red",
   };
 
-  const drawables: Drawable[] = [obj, movingObj];
+  drawables.push(obj);
+  drawables.push(movingObj);
 
   let forceDrawables = generateForceDrawables(
     new Vec2(1000, 600), // assigned in html
@@ -136,4 +145,28 @@ const run = (document: Document): void => {
   simLoop(ctx, performance.now(), drawables);
 };
 
+const addAddParticleButton = (document: Document) => {
+  const button = document.createElement("button");
+  button.textContent = "Add random particle";
+  button.addEventListener("click", () => {
+    const randomX = Math.random() * 1000;
+    const randomY = Math.random() * 600;
+
+    let movingObj: Circle = {
+      radius: 10,
+      type: DrawableType.Circle,
+      obj: {
+        charge: 1e-6,
+        mass: 1,
+        vel: new Vec2(0, 0),
+        pos: new Vec2(randomX, randomY),
+      },
+      color: "red",
+    };
+    drawables.push(movingObj);
+  });
+  document.body.appendChild(button);
+};
+
+addAddParticleButton(document);
 run(document);
