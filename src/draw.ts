@@ -1,10 +1,11 @@
 export const drawCircle = (
   ctx: CanvasRenderingContext2D,
   x: number,
-  y: number
+  y: number,
+  rad: number = 20
 ): void => {
   ctx.beginPath();
-  ctx.arc(x, y, 20, 0, 2 * Math.PI);
+  ctx.arc(x, y, rad, 0, 2 * Math.PI);
   ctx.fillStyle = "red";
   ctx.fill();
 };
