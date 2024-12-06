@@ -1,4 +1,4 @@
-import { Vec2 } from "./vec2.js";
+import { FieldVec2, Vec2 } from "./vec2.js";
 import {
   Obj,
   Drawable,
@@ -45,6 +45,71 @@ const simLoop = (
   requestAnimationFrame((time) => simLoop(ctx, time, drawables));
 };
 
+const generateForceField = (
+  area: Vec2,
+  step: number,
+  pointForceCalculator: (gridPoint: Vec2) => Vec2
+): FieldVec2[] => {
+  let forces: FieldVec2[] = [];
+
+  const maxMag = 3.59; // hardcoded current max. magnitude
+  const lineLenMax = 30; // rendered max length
+
+  let maxMagnitude = 0;
+  for (let x = 0; x < area.x / step; x++) {
+    for (let y = 0; y < area.y / step; y++) {
+      const gridPoint = new Vec2(x * step, y * step);
+
+      const force = pointForceCalculator(gridPoint);
+      const magnitude = force.magnitude();
+      if (magnitude) {
+        const factor = lineLenMax / maxMag;
+        const vec = force
+          .normalize()
+          .mul(magnitude * factor)
+          .add(gridPoint);
+
+        forces.push(new FieldVec2(gridPoint, vec));
+
+        maxMagnitude = Math.max(magnitude, maxMagnitude);
+      }
+    }
+  }
+
+  console.log("maxMagnitude: %o", maxMagnitude);
+  return forces;
+};
+
+const generateForceDrawables = (
+  area: Vec2,
+  step: number,
+  pointForceCalculator: (gridPoint: Vec2) => Vec2
+): Drawable[] => {
+  const forces: FieldVec2[] = generateForceField(
+    area,
+    step,
+    pointForceCalculator
+  );
+
+  return forces.map((force) => {
+    return forceToDrawable(force);
+  });
+};
+
+const forceToDrawable = (force: FieldVec2): Drawable => {
+  return {
+    obj: {
+      charge: 1,
+      mass: 1,
+      vel: new Vec2(0, 0),
+      pos: force.start,
+    },
+    type: DrawableType.Arrow,
+    start: force.start,
+    end: force.end,
+  };
+};
+
 const run = (document: Document): void => {
   const ctx = getContext(document);
 
@@ -60,54 +125,17 @@ const run = (document: Document): void => {
     color: "red",
   };
 
-  let forces: Drawable[] = [];
-
-  const step = 50;
-
-  // dimensions assigned in html
-  const width = 1000;
-  const height = 600;
-
-  const maxMag = 3.59; // hardcoded current max. magnitude
-  const lineLenMax = 30; // rendered max length
-
-  let maxMagnitude = 0;
-  for (let x = 0; x < width / step; x++) {
-    for (let y = 0; y < height / step; y++) {
-      const point = new Vec2(x * step, y * step);
-      const f = calcForce(obj.obj, point);
-
-      const lineStart = point;
-
-      const factor = lineLenMax / maxMag;
-      let magnitude = f.magnitude();
-      maxMagnitude = Math.max(magnitude, maxMagnitude);
-      if (magnitude) {
-        const lineEnd = f
-          .normalize()
-          .mul(magnitude * factor)
-          .add(lineStart);
-
-        const item: Arrow = {
-          obj: {
-            charge: 1,
-            mass: 1,
-            vel: new Vec2(0, 0),
-            pos: point,
-          },
-          type: DrawableType.Arrow,
-          start: lineStart,
-          end: lineEnd,
-        };
-        forces.push(item);
-      }
-    }
-  }
-
-  console.log("maxMagnitude: %o", maxMagnitude);
   const drawables: Drawable[] = [obj];
 
-  drawables.push(...forces);
+  let forceDrawables = generateForceDrawables(
+    new Vec2(1000, 600), // assigned in html
+    50,
+    (gridPoint) => {
+      return calcForce(obj.obj, gridPoint);
+    }
+  );
+
+  drawables.push(...forceDrawables);
 
   simLoop(ctx, performance.now(), drawables);
 };
