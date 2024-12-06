@@ -8,7 +8,6 @@ import {
   Line,
   Arrow,
 } from "./entities.js";
-import { applyForce } from "./common_phys.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 
