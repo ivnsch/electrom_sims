@@ -12,10 +12,7 @@ import { applyForce } from "./common_phys.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 
-const update = (drawables: Drawable[], time: number) => {
-  // for now we'll just assume this obj
-  let d = drawables[0];
-};
+const update = (drawables: Drawable[], time: number) => {};
 
 // https://en.wikipedia.org/wiki/Coulomb%27s_law#Mathematical_form
 export const calcForce = (obj: Obj, point: Vec2): Vec2 => {
