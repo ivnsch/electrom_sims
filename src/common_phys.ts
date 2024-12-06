@@ -11,3 +11,9 @@ export const applyForce = (obj: Obj, f: Vec2, deltaTime: number) => {
   // add the velocity
   obj.vel = obj.vel.add(vel);
 };
+
+export const applyVelocity = (obj: Obj, deltaTime: number) => {
+  const slowingFactor = 20000;
+  obj.pos.x += (obj.vel.x * deltaTime) / slowingFactor;
+  obj.pos.y += (obj.vel.y * deltaTime) / slowingFactor;
+};

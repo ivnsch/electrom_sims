@@ -40,3 +40,15 @@ export class Vec2 {
     return `Vec2(${this.x}, ${this.y})`;
   }
 }
+
+// a Vec2 in a field, that is with an explicit starting point
+export class FieldVec2 {
+  // these are strictly speaking points, not vecs, but for now conveniently as vecs
+  start: Vec2;
+  end: Vec2;
+
+  constructor(start: Vec2, vec: Vec2) {
+    this.start = start;
+    this.end = vec;
+  }
+}

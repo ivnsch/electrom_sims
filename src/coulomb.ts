@@ -1,6 +1,6 @@
 import { Vec2 } from "./vec2.js";
 import { Obj, Drawable, DrawableType, Circle } from "./entities.js";
-import { applyForce } from "./common_phys.js";
+import { applyForce, applyVelocity } from "./common_phys.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 
@@ -19,10 +19,7 @@ const update = (drawables: Drawable[], time: number) => {
   applyForce(d2.obj, force2, deltaTime);
 
   drawables.forEach((d) => {
-    // this needs to be implemented better
-    const slowingFactor = 20000;
-    d.obj.pos.x += (d.obj.vel.x * deltaTime) / slowingFactor;
-    d.obj.pos.y += (d.obj.vel.y * deltaTime) / slowingFactor;
+    applyVelocity(d.obj, deltaTime);
   });
 };
 
