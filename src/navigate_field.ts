@@ -16,7 +16,7 @@ const update = (drawables: Drawable[], time: number) => {
   const force = calcForce(sourceObj.obj, movingObj.obj.pos);
 
   applyForce(movingObj.obj, force, deltaTime);
-  applyVelocity(movingObj.obj, deltaTime);
+  applyVelocity(movingObj.obj, deltaTime, 2000);
 };
 
 const simLoop = (

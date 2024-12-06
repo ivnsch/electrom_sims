@@ -7,6 +7,7 @@ import { getContext } from "./common_html.js";
 let lastTime = 0;
 const update = (drawables: Drawable[], time: number) => {
   let deltaTime = time - lastTime;
+  lastTime = time;
 
   // for now we'll just assume these 2 objs
   let d1 = drawables[0];
