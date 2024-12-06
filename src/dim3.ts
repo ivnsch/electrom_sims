@@ -15,7 +15,7 @@ const toScreenCoords = (modelCoords: Vec3): Vec2 => {
   // project onto canvas
   // note z negated so usual axes orientation up/right positive
   const xProj = modelCoords.x / -modelCoords.z;
-  const yProj = (modelCoords.y / -modelCoords.z) * aspectRatio;
+  const yProj = (modelCoords.y / modelCoords.z) * aspectRatio;
   // normalize ([-1, 1] -> [0, 1])
   const xProjRemap = (1 + xProj) / 2;
   const yProjRemap = (1 + yProj) / 2;
@@ -26,9 +26,89 @@ const toScreenCoords = (modelCoords: Vec3): Vec2 => {
   return new Vec2(xProjPix, yProjPix);
 };
 
-const render = (document: Document): void => {
-  const ctx = getContext(document);
+const renderTriangles = (ctx: CanvasRenderingContext2D): void => {
+  const side = 1;
+  const z_offset = -3;
+  const triangles = [
+    // front
+    [
+      { x: -side / 2, y: -side / 2, z: z_offset },
+      { x: -side / 2, y: side / 2, z: z_offset },
+      { x: side / 2, y: -side / 2, z: z_offset },
+    ],
+    [
+      { x: -side / 2, y: side / 2, z: z_offset },
+      { x: side / 2, y: side / 2, z: z_offset },
+      { x: side / 2, y: -side / 2, z: z_offset },
+    ],
+    // back
+    [
+      { x: -side / 2, y: -side / 2, z: -side + z_offset },
+      { x: -side / 2, y: side / 2, z: -side + z_offset },
+      { x: side / 2, y: -side / 2, z: -side + z_offset },
+    ],
+    [
+      { x: -side / 2, y: side / 2, z: -side + z_offset },
+      { x: side / 2, y: side / 2, z: -side + z_offset },
+      { x: side / 2, y: -side / 2, z: -side + z_offset },
+    ],
+    // top
+    [
+      { x: -side / 2, y: side / 2, z: -side + z_offset },
+      { x: -side / 2, y: side / 2, z: z_offset },
+      { x: side / 2, y: side / 2, z: z_offset },
+    ],
+    [
+      { x: -side / 2, y: side / 2, z: -side + z_offset },
+      { x: side / 2, y: side / 2, z: -side + z_offset },
+      { x: side / 2, y: side / 2, z: z_offset },
+    ],
+    // right
+    [
+      { x: side / 2, y: side / 2, z: z_offset },
+      { x: side / 2, y: side / 2, z: -side + z_offset },
+      { x: side / 2, y: -side / 2, z: z_offset },
+    ],
+    [
+      { x: side / 2, y: -side / 2, z: -side + z_offset },
+      { x: side / 2, y: side / 2, z: -side + z_offset },
+      { x: side / 2, y: -side / 2, z: z_offset },
+    ],
+    // bottom
+    [
+      { x: -side / 2, y: -side / 2, z: -side + z_offset },
+      { x: -side / 2, y: -side / 2, z: z_offset },
+      { x: side / 2, y: -side / 2, z: z_offset },
+    ],
+    [
+      { x: -side / 2, y: -side / 2, z: -side + z_offset },
+      { x: side / 2, y: -side / 2, z: -side + z_offset },
+      { x: side / 2, y: -side / 2, z: z_offset },
+    ],
+    // left
+    [
+      { x: -side / 2, y: side / 2, z: z_offset },
+      { x: -side / 2, y: side / 2, z: -side + z_offset },
+      { x: -side / 2, y: -side / 2, z: z_offset },
+    ],
+    [
+      { x: -side / 2, y: -side / 2, z: -side + z_offset },
+      { x: -side / 2, y: side / 2, z: -side + z_offset },
+      { x: -side / 2, y: -side / 2, z: z_offset },
+    ],
+  ];
 
+  triangles.forEach((triangle) => {
+    let screenCoords1 = toScreenCoords(triangle[0]);
+    let screenCoords2 = toScreenCoords(triangle[1]);
+    let screenCoords3 = toScreenCoords(triangle[2]);
+    drawLine(ctx, screenCoords1, screenCoords2);
+    drawLine(ctx, screenCoords2, screenCoords3);
+    drawLine(ctx, screenCoords3, screenCoords1);
+  });
+};
+
+const renderCorners = (ctx: CanvasRenderingContext2D): void => {
   const corners = [
     { x: 1, y: -1, z: -5 }, // 0
     { x: 1, y: -1, z: -3 }, // 1
@@ -68,6 +148,12 @@ const render = (document: Document): void => {
   drawLine(ctx, screenCorners[7], screenCorners[5]);
   drawLine(ctx, screenCorners[5], screenCorners[1]);
   drawLine(ctx, screenCorners[1], screenCorners[3]);
+};
+
+const render = (document: Document): void => {
+  const ctx = getContext(document);
+  //   renderCorners(ctx);
+  renderTriangles(ctx);
 };
 
 render(document);
