@@ -6,80 +6,89 @@ import { Matrix3x3 } from "./matrix_3x3.js";
 import { Vec2 } from "./vec2.js";
 import { Vec3, Vec3Shape } from "./vec3.js";
 
+const cubeSide = 1;
+const zOffset = -3;
+
+var rotateAroundY = false;
+var rotationAroundY = 0;
+
 const renderTriangles = (ctx: CanvasRenderingContext2D): void => {
-  const side = 1;
-  const zOffset = -3;
+  if (rotateAroundY) {
+    rotationAroundY += Math.PI / 100;
+  }
+
   const triangles = [
     // front
     [
-      { x: -side / 2, y: -side / 2, z: zOffset },
-      { x: -side / 2, y: side / 2, z: zOffset },
-      { x: side / 2, y: -side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
     [
-      { x: -side / 2, y: side / 2, z: zOffset },
-      { x: side / 2, y: side / 2, z: zOffset },
-      { x: side / 2, y: -side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
     // back
     [
-      { x: -side / 2, y: -side / 2, z: -side + zOffset },
-      { x: -side / 2, y: side / 2, z: -side + zOffset },
-      { x: side / 2, y: -side / 2, z: -side + zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
     ],
     [
-      { x: -side / 2, y: side / 2, z: -side + zOffset },
-      { x: side / 2, y: side / 2, z: -side + zOffset },
-      { x: side / 2, y: -side / 2, z: -side + zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
     ],
     // top
     [
-      { x: -side / 2, y: side / 2, z: -side + zOffset },
-      { x: -side / 2, y: side / 2, z: zOffset },
-      { x: side / 2, y: side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: zOffset },
     ],
     [
-      { x: -side / 2, y: side / 2, z: -side + zOffset },
-      { x: side / 2, y: side / 2, z: -side + zOffset },
-      { x: side / 2, y: side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: zOffset },
     ],
     // right
     [
-      { x: side / 2, y: side / 2, z: zOffset },
-      { x: side / 2, y: side / 2, z: -side + zOffset },
-      { x: side / 2, y: -side / 2, z: zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
     [
-      { x: side / 2, y: -side / 2, z: -side + zOffset },
-      { x: side / 2, y: side / 2, z: -side + zOffset },
-      { x: side / 2, y: -side / 2, z: zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
     // bottom
     [
-      { x: -side / 2, y: -side / 2, z: -side + zOffset },
-      { x: -side / 2, y: -side / 2, z: zOffset },
-      { x: side / 2, y: -side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
     [
-      { x: -side / 2, y: -side / 2, z: -side + zOffset },
-      { x: side / 2, y: -side / 2, z: -side + zOffset },
-      { x: side / 2, y: -side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
+      { x: cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
     // left
     [
-      { x: -side / 2, y: side / 2, z: zOffset },
-      { x: -side / 2, y: side / 2, z: -side + zOffset },
-      { x: -side / 2, y: -side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
     [
-      { x: -side / 2, y: -side / 2, z: -side + zOffset },
-      { x: -side / 2, y: side / 2, z: -side + zOffset },
-      { x: -side / 2, y: -side / 2, z: zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: -cubeSide + zOffset },
+      { x: -cubeSide / 2, y: cubeSide / 2, z: -cubeSide + zOffset },
+      { x: -cubeSide / 2, y: -cubeSide / 2, z: zOffset },
     ],
   ];
 
   triangles.forEach((triangle) => {
-    let rotMatrix = Matrix3x3.rotY(Math.PI / 4);
+    console.log("!! rotationAroundY" + rotationAroundY);
+    let rotMatrix = Matrix3x3.rotY(rotationAroundY);
     let screenCoords1 = transform(rotMatrix, triangle[0], zOffset);
     let screenCoords2 = transform(rotMatrix, triangle[1], zOffset);
     let screenCoords3 = transform(rotMatrix, triangle[2], zOffset);
@@ -94,13 +103,14 @@ const transform = (
   vertex: Vec3Shape,
   zOffset: number
 ): Vec2 => {
+  const translationForRotationAroundCenter = zOffset - cubeSide / 2;
   // translate, such that origin is at center of cube
-  vertex.z -= zOffset;
+  vertex.z -= translationForRotationAroundCenter;
   const vec = Vec3.fromShape(vertex);
   // apply rotation
   const rotated = rotMatrix.mul(vec);
   // translate back
-  rotated.z += zOffset;
+  rotated.z += translationForRotationAroundCenter;
   // map to screen coords
   return toScreenCoords(rotated);
 };
@@ -147,10 +157,64 @@ const renderCorners = (ctx: CanvasRenderingContext2D): void => {
   drawLine(ctx, screenCorners[1], screenCorners[3]);
 };
 
-const render = (document: Document): void => {
-  const ctx = getContext(document);
-  //   renderCorners(ctx);
-  renderTriangles(ctx);
+const drawXYAxes = (ctx: CanvasRenderingContext2D) => {
+  const zOffset = -3;
+  const x1 = {
+    x: -4,
+    y: 0,
+    z: zOffset,
+  };
+  const x2 = {
+    x: 4,
+    y: 0,
+    z: zOffset,
+  };
+  const y1 = {
+    x: 0,
+    y: 4,
+    z: zOffset,
+  };
+  const y2 = {
+    x: 0,
+    y: -4,
+    z: zOffset,
+  };
+
+  drawLine(
+    ctx,
+    toScreenCoords(Vec3.fromShape(x1)),
+    toScreenCoords(Vec3.fromShape(x2))
+  );
+  drawLine(
+    ctx,
+    toScreenCoords(Vec3.fromShape(y1)),
+    toScreenCoords(Vec3.fromShape(y2))
+  );
 };
 
+const render = (document: Document): void => {
+  const ctx = getContext(document);
+  ctx.clearRect(0, 0, 1000, 600);
+
+  drawXYAxes(ctx);
+  //   renderCorners(ctx);
+  renderTriangles(ctx);
+  requestAnimationFrame(() => render(document));
+};
+
+const addRotateButton = (document: Document) => {
+  const button = document.createElement("button");
+  button.textContent = "Rotate";
+  button.addEventListener("mousedown", () => {
+    rotateAroundY = true;
+    console.log("down");
+  });
+  button.addEventListener("mouseup", () => {
+    rotateAroundY = false;
+    console.log("up");
+  });
+  document.body.appendChild(button);
+};
+
+addRotateButton(document);
 render(document);
