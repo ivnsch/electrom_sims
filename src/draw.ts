@@ -3,7 +3,7 @@ export const drawCircle = (
   x: number,
   y: number,
   rad: number = 20,
-  color: string = "red"
+  color: string = "black"
 ): void => {
   ctx.beginPath();
   ctx.arc(x, y, rad, 0, 2 * Math.PI);

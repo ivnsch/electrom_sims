@@ -1,30 +1,8 @@
+import { toScreenCoords } from "./common_3d.js";
 import { drawLine } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 import { drawCircle } from "./draw.js";
-import { Vec2 } from "./vec2.js";
-
-type Vec3 = { x: number; y: number; z: number };
-
-const toScreenCoords = (modelCoords: Vec3): Vec2 => {
-  // defined in html
-  const width = 1000;
-  const height = 600;
-
-  const aspectRatio = width / height;
-
-  // project onto canvas
-  // note z negated so usual axes orientation up/right positive
-  const xProj = modelCoords.x / -modelCoords.z;
-  const yProj = (modelCoords.y / modelCoords.z) * aspectRatio;
-  // normalize ([-1, 1] -> [0, 1])
-  const xProjRemap = (1 + xProj) / 2;
-  const yProjRemap = (1 + yProj) / 2;
-  // normalized -> full canvas space
-  const xProjPix = xProjRemap * width;
-  const yProjPix = yProjRemap * height;
-
-  return new Vec2(xProjPix, yProjPix);
-};
+import { Vec3 } from "./vec3.js";
 
 const renderTriangles = (ctx: CanvasRenderingContext2D): void => {
   const side = 1;
@@ -99,9 +77,9 @@ const renderTriangles = (ctx: CanvasRenderingContext2D): void => {
   ];
 
   triangles.forEach((triangle) => {
-    let screenCoords1 = toScreenCoords(triangle[0]);
-    let screenCoords2 = toScreenCoords(triangle[1]);
-    let screenCoords3 = toScreenCoords(triangle[2]);
+    let screenCoords1 = toScreenCoords(Vec3.fromShape(triangle[0]));
+    let screenCoords2 = toScreenCoords(Vec3.fromShape(triangle[1]));
+    let screenCoords3 = toScreenCoords(Vec3.fromShape(triangle[2]));
     drawLine(ctx, screenCoords1, screenCoords2);
     drawLine(ctx, screenCoords2, screenCoords3);
     drawLine(ctx, screenCoords3, screenCoords1);
@@ -121,12 +99,12 @@ const renderCorners = (ctx: CanvasRenderingContext2D): void => {
   ];
 
   for (const corner of corners) {
-    let screenCoords = toScreenCoords(corner);
+    let screenCoords = toScreenCoords(Vec3.fromShape(corner));
     drawCircle(ctx, screenCoords.x, screenCoords.y, 5);
   }
 
   const screenCorners = corners.map((corner) => {
-    return toScreenCoords(corner);
+    return toScreenCoords(Vec3.fromShape(corner));
   });
 
   screenCorners.forEach((screenCorner, index) => {
