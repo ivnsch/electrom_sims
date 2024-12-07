@@ -59,4 +59,4 @@ export class FieldVec3 {
   }
 }
 
-type Vec3Shape = { x: number; y: number; z: number };
+export type Vec3Shape = { x: number; y: number; z: number };
