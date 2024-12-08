@@ -10,3 +10,14 @@ export const drawCircle = (
   ctx.fillStyle = color;
   ctx.fill();
 };
+
+export const drawOutlineCircle = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  rad: number = 20
+): void => {
+  ctx.beginPath();
+  ctx.arc(x, y, rad, 0, 2 * Math.PI);
+  ctx.stroke();
+};
