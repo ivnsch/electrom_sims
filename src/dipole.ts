@@ -12,6 +12,7 @@ import { applyForce } from "./common_phys.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 import { calcForce } from "./electric_field.js";
+import { canvas_height, canvas_width } from "./constants.js";
 
 const update = (drawables: Drawable[], time: number) => {
   // for now we'll just assume this obj
@@ -65,9 +66,8 @@ const run = (document: Document): void => {
   // enable this and disable above to see problem
   //   const correction = 1;
 
-  // dimensions assigned in html
-  const width = 1000 * correction;
-  const height = 600 * correction;
+  const width = canvas_width * correction;
+  const height = canvas_height * correction;
 
   const maxMag = 3.66; // hardcoded current max. magnitude
   const lineLenMax = 30; // rendered max length

@@ -1,6 +1,7 @@
 import { drawLine } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 import { renderSpring } from "./common_spring.js";
+import { canvas_height, canvas_width } from "./constants.js";
 import { Vec2 } from "./vec2.js";
 
 let springWidth = 300;
@@ -13,9 +14,7 @@ const renderSpringMain = (ctx: CanvasRenderingContext2D): void => {
     springWidth = springWidth + 1;
   }
 
-  const width = 1000;
-  const height = 600;
-  const center = new Vec2(width, height).div(2);
+  const center = new Vec2(canvas_width, canvas_height).div(2);
 
   const springHeight = 50;
 

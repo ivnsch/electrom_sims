@@ -1,5 +1,6 @@
 import { getContext } from "./common_html.js";
 import { renderSpring } from "./common_spring.js";
+import { canvas_height, canvas_width } from "./constants.js";
 import { drawCircle, drawOutlineCircle } from "./draw.js";
 import { Vec2 } from "./vec2.js";
 
@@ -7,9 +8,7 @@ const renderHarmonicOscillator = (
   ctx: CanvasRenderingContext2D,
   time: number
 ): void => {
-  const width = 1000;
-  const height = 600;
-  const center = new Vec2(width, height).div(2);
+  const center = new Vec2(canvas_width, canvas_height).div(2);
 
   const amplitude = 200;
   const period = 8000; // ms
@@ -30,9 +29,7 @@ const renderProgressCircle = (
   ctx: CanvasRenderingContext2D,
   omegaTime: number
 ) => {
-  const width = 1000;
-  const height = 600;
-  const center = new Vec2(width, height).div(2);
+  const center = new Vec2(canvas_width, canvas_height).div(2);
   const circleCenter = new Vec2(center.x, center.y - 150);
 
   const radius = 50;
