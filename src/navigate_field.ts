@@ -4,6 +4,7 @@ import { applyForce, applyVelocity } from "./common_phys.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 import { calcForce } from "./electric_field.js";
+import { canvas_height, canvas_width } from "./constants.js";
 
 const drawables: Drawable[] = [];
 
@@ -133,7 +134,7 @@ const run = (document: Document): void => {
   drawables.push(movingObj);
 
   let forceDrawables = generateForceDrawables(
-    new Vec2(1000, 600), // assigned in html
+    new Vec2(canvas_width, canvas_height),
     50,
     (gridPoint) => {
       return calcForce(obj.obj, gridPoint);
@@ -149,8 +150,8 @@ const addAddParticleButton = (document: Document) => {
   const button = document.createElement("button");
   button.textContent = "Add random particle";
   button.addEventListener("click", () => {
-    const randomX = Math.random() * 1000;
-    const randomY = Math.random() * 600;
+    const randomX = Math.random() * canvas_width;
+    const randomY = Math.random() * canvas_height;
 
     let movingObj: Circle = {
       radius: 10,
