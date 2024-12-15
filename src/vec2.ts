@@ -39,6 +39,10 @@ export class Vec2 {
   toString(): string {
     return `Vec2(${this.x}, ${this.y})`;
   }
+
+  isZero(): boolean {
+    return this.x == 0 && this.y == 0;
+  }
 }
 
 // a Vec2 in a field, that is with an explicit starting point

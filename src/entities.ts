@@ -13,6 +13,8 @@ export type Obj = {
   mass: number;
   vel: Vec2;
   charge: number;
+  // force being exerted on the object
+  force: Vec2;
 };
 
 // this gets a "Drawable" at the end to diff from other things named "Text"

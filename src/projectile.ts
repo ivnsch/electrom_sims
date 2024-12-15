@@ -51,6 +51,7 @@ const run = (document: Document): void => {
       mass: 1,
       vel: new Vec2(0, 0),
       pos: new Vec2(300, 200),
+      force: new Vec2(0, 0),
     },
     color: "black",
   };

@@ -21,8 +21,9 @@ const update = (drawables: Drawable[], time: number) => {
   for (let movingObj of movingObjs) {
     if (movingObj.type == DrawableType.Circle) {
       const force = calcForce(sourceObj.obj, movingObj.obj.pos);
+      movingObj.obj.force = force;
 
-      applyForce(movingObj.obj, force, deltaTime);
+      applyForce(movingObj.obj, deltaTime);
       applyVelocity(movingObj.obj, deltaTime, 2000);
     }
   }
@@ -96,6 +97,7 @@ const forceToDrawable = (force: FieldVec2): Drawable => {
       mass: 1,
       vel: new Vec2(0, 0),
       pos: force.start,
+      force: new Vec2(0, 0),
     },
     type: DrawableType.Arrow,
     start: force.start,
@@ -114,6 +116,7 @@ const run = (document: Document): void => {
       mass: 1,
       vel: new Vec2(0, 0),
       pos: new Vec2(300, 200),
+      force: new Vec2(0, 0),
     },
     color: "red",
   };
@@ -126,6 +129,7 @@ const run = (document: Document): void => {
       mass: 1,
       vel: new Vec2(0, 0),
       pos: new Vec2(400, 300),
+      force: new Vec2(0, 0),
     },
     color: "red",
   };
@@ -161,6 +165,7 @@ const addAddParticleButton = (document: Document) => {
         mass: 1,
         vel: new Vec2(0, 0),
         pos: new Vec2(randomX, randomY),
+        force: new Vec2(0, 0),
       },
       color: "red",
     };

@@ -1,14 +1,5 @@
 import { Vec2 } from "./vec2.js";
-import {
-  Obj,
-  Drawable,
-  DrawableType,
-  Circle,
-  TextDrawable,
-  Line,
-  Arrow,
-} from "./entities.js";
-import { applyForce } from "./common_phys.js";
+import { Drawable, DrawableType, Circle, Arrow } from "./entities.js";
 import { draw } from "./common_draw.js";
 import { getContext } from "./common_html.js";
 import { calcForce } from "./electric_field.js";
@@ -40,6 +31,7 @@ const run = (document: Document): void => {
       mass: 1,
       vel: new Vec2(0, 0),
       pos: new Vec2(300, 200),
+      force: new Vec2(0, 0),
     },
     color: "red",
   };
@@ -51,6 +43,7 @@ const run = (document: Document): void => {
       mass: 1,
       vel: new Vec2(0, 0),
       pos: new Vec2(500, 200),
+      force: new Vec2(0, 0),
     },
     color: "green",
   };
@@ -105,6 +98,7 @@ const run = (document: Document): void => {
             mass: 1,
             vel: new Vec2(0, 0),
             pos: point,
+            force: new Vec2(0, 0),
           },
           type: DrawableType.Arrow,
           start: correctedLineStart,

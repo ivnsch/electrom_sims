@@ -1,11 +1,11 @@
 import { Obj } from "./entities.js";
 import { Vec2 } from "./vec2.js";
 
-export const applyForce = (obj: Obj, f: Vec2, deltaTime: number) => {
+export const applyForce = (obj: Obj, deltaTime: number) => {
   // f = ma
-  const a = f.div(obj.mass);
+  const a = obj.force.div(obj.mass);
 
-  // a -> v
+  // v = at (change in velocity in time passed)
   const vel = a.mul(deltaTime);
 
   // add the velocity

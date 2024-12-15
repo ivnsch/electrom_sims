@@ -16,8 +16,11 @@ const update = (drawables: Drawable[], time: number) => {
   let force1 = calcForce(d1.obj, d2.obj);
   let force2 = calcForce(d2.obj, d1.obj);
 
-  applyForce(d1.obj, force1, deltaTime);
-  applyForce(d2.obj, force2, deltaTime);
+  d1.obj.force = force1;
+  d2.obj.force = force2;
+
+  applyForce(d1.obj, deltaTime);
+  applyForce(d2.obj, deltaTime);
 
   drawables.forEach((d) => {
     applyVelocity(d.obj, deltaTime);
@@ -63,6 +66,7 @@ const run = (document: Document): void => {
         mass: 1,
         vel: new Vec2(0, 0),
         pos: new Vec2(300, 200),
+        force: new Vec2(0, 0),
       },
       color: "red",
     },
@@ -74,6 +78,7 @@ const run = (document: Document): void => {
         mass: 1,
         vel: new Vec2(0, 0),
         pos: new Vec2(200, 100),
+        force: new Vec2(0, 0),
       },
       color: "green",
     },
