@@ -10,7 +10,12 @@ const radius = 60;
 const positions: Vec2[] = [];
 
 const colorForDensity = (density: number): string => {
-  return `rgb(${0}, ${0}, ${255}, ${density})`;
+  const r = Math.floor(255 * density);
+  const g = 0;
+  const b = Math.floor(255 * (1 - density));
+  return `rgb(${r}, ${g}, ${b}, 1)`;
+
+  //   return `rgb(${0}, ${0}, ${255}, ${density})`;
 };
 
 const smoothingKernel = (radius: number, distance: number) => {
