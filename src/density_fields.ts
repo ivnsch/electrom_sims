@@ -52,7 +52,7 @@ const fillPixelColors = () => {
 };
 
 const addRandomPositions = () => {
-  for (let index = 0; index < 100; index++) {
+  for (let index = 0; index < 300; index++) {
     positions.push(
       new Vec2(Math.random() * canvas_width, Math.random() * canvas_height)
     );
