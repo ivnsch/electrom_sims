@@ -43,6 +43,12 @@ export class Vec2 {
   isZero(): boolean {
     return this.x == 0 && this.y == 0;
   }
+
+  distance(v: Vec2): number {
+    const dx = this.x - v.x;
+    const dy = this.y - v.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
 }
 
 // a Vec2 in a field, that is with an explicit starting point
