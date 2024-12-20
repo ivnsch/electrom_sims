@@ -5,7 +5,7 @@ import { canvas_height, canvas_width } from "./constants.js";
 const pixelColors: string[][] = [];
 
 const stepSize = 2;
-const radius = 60;
+const radius = 70;
 
 const positions: Vec2[] = [];
 
